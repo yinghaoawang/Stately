@@ -1,0 +1,21 @@
+{
+  "name": "stately",
+  "version": "1.0.0",
+  "description": "Testing app for Heroku hosting.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "test"
+  ],
+  "author": "Yinghao Wang",
+  "engines": {
+    "node": "10.x"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
