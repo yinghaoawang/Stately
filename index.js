@@ -24,7 +24,11 @@ app.get('/', (req, res) => {
         if (err) {
             res.send(err);
         } else {
-            let str = JSON.stringify(result.rows[0]) + "\n";
+            //let str = JSON.stringify(JSON.stringify(result.rows)) + "\n";
+            let str = "";
+            for (let i = 0; i < result.rows.length; ++i) {
+                str += JSON.stringify(result.rows[i]) + '</br>';
+            }
             res.send(str);
         }
     });
@@ -41,8 +45,8 @@ app.get('/aha', (req, res) => {
             res.send(err);
         } else {
             console.log(result);
-            let str = JSON.stringify(result.rows[0]) + "\n";
-            res.send(rando + '\n' + str);
+            let str = JSON.stringify(result.rows[0]) + '</br>';
+            res.send(rando + '</br>' + str);
         }
     });
 });
