@@ -44,9 +44,8 @@ app.get('/aha', (req, res) => {
             console.log(err);
             res.send(err);
         } else {
-            console.log(result);
-            let str = JSON.stringify(result.rows[0]) + '</br>';
-            res.send(rando + '</br>' + str);
+            let str = JSON.stringify(result) + '</br>';
+            res.send('Success: Inserted ' + rando + '</br>' + str);
         }
     });
 });
