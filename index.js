@@ -17,37 +17,37 @@ client.connect()
     .then(() => console.log('Connected to the database.'))
     .catch((err) => console.log(err));
 
-app.get('/', (req, res) => {
-    const query = 'SELECT * FROM Values';
+app.get('/', async (req, res, next) => {
+    try {
+        const query = 'SELECT * FROM Values';
 
-    client.query(query, function(err, result) {
-        if (err) {
-            res.send(err);
-        } else {
-            //let str = JSON.stringify(JSON.stringify(result.rows)) + "\n";
-            let str = "";
-            for (let i = 0; i < result.rows.length; ++i) {
-                str += JSON.stringify(result.rows[i]) + '</br>';
-            }
-            res.send(str);
+        const queryResult = await client.query(query);
+
+        let str = "";
+        for (let i = 0; i < queryResult.rows.length; ++i) {
+            str += JSON.stringify(queryResult.rows[i]) + '</br>';
         }
-    });
+        res.status(200).send(str);
+    } catch (err) {
+        next(err);
+        return;
+    }
 });
 
-app.get('/aha', (req, res) => {
-    const rando = Math.floor(Math.random() * 100000);
+app.get('/aha', async (req, res, next) => {
+    try {
+        const rando = Math.floor(Math.random() * 100000);
+        const query = `INSERT INTO values (value) VALUES (${rando})`;
 
-    const query = `INSERT INTO values (value) VALUES (${rando})`;
+        const queryResult = client.query(query);
 
-    client.query(query, function(err, result) {
-        if (err) {
-            console.log(err);
-            res.send(err);
-        } else {
-            let str = JSON.stringify(result) + '</br>';
-            res.send('Success: Inserted ' + rando + '</br>' + str);
-        }
-    });
+
+        res.status(200).send('Success: Inserted ' + rando + '</br>');
+
+    } catch (err) {
+        next(err);
+        return;
+    }
 });
 
 app.listen(port, () => {
