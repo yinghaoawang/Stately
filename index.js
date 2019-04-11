@@ -11,17 +11,14 @@ const client = new Client({
     ssl: true,
 });
 
-console.log(process.env.DATABASE_URL);
-
 client.connect()
     .then(() => console.log('Connected to the database.'))
     .catch((err) => console.log(err));
 
 app.get('/', async (req, res, next) => {
     try {
-        const query = 'SELECT * FROM Values';
-
-        const queryResult = await client.query(query);
+        let query = 'SELECT * FROM Values';
+        let queryResult = await client.query(query);
 
         let str = "";
         for (let i = 0; i < queryResult.rows.length; ++i) {
@@ -34,12 +31,28 @@ app.get('/', async (req, res, next) => {
     }
 });
 
+app.get('/init', async (req, res, next) => {
+    try {
+        let query = 'DROP TABLE IF EXISTS values';
+        let queryResult = await client.query(query);
+        query = `CREATE TABLE values (
+            value_id serial PRIMARY KEY,
+            value integer
+        )`;
+        queryResult = await client.query(query);
+        res.status(200).send('Success: Created fresh tables');
+    } catch (err) {
+        next(err);
+        return;
+    }
+});
+
 app.get('/aha', async (req, res, next) => {
     try {
         const rando = Math.floor(Math.random() * 100000);
         const query = `INSERT INTO values (value) VALUES (${rando})`;
 
-        const queryResult = client.query(query);
+        const queryResult = await client.query(query);
 
 
         res.status(200).send('Success: Inserted ' + rando + '</br>');
