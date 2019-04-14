@@ -41,7 +41,7 @@ app.get('/init', async (req, res, next) => {
             DROP TABLE IF EXISTS "account", category, session;
             CREATE TABLE "account" (
                 account_id serial,
-                username varchar(255) NOT NULL,
+                username varchar(255) UNIQUE NOT NULL,
                 display_name varchar(255) NOT NULL,
                 hashed_password varchar(255) NOT NULL,
                 PRIMARY KEY (account_id)
@@ -91,7 +91,7 @@ app.post('/aha', async (req, res, next) => {
             VALUES ($1, $2, $3)
         `;
         let queryResult = await client.query(query, values);
-        res.status(200).send(queryResult);
+        res.status(200).redirect('/');
     } catch (err) {
         next(err);
         return;
