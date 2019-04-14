@@ -1,8 +1,11 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 
 const { Client } = require('pg');
 
 const app = express();
+
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const port = process.env.PORT || 5000;
 
@@ -14,10 +17,11 @@ const client = new Client({
 client.connect()
     .then(() => console.log('Connected to the database.'))
     .catch((err) => console.log(err));
+    
 
 app.get('/', async (req, res, next) => {
     try {
-        let query = 'SELECT * FROM Values';
+        let query = 'SELECT * FROM account';
         let queryResult = await client.query(query);
 
         let str = "";
@@ -70,16 +74,24 @@ app.get('/init', async (req, res, next) => {
 
 app.get('/aha', async (req, res, next) => {
     try {
-        const rando = Math.floor(Math.random() * 100000);
-        /*
-        const query = `INSERT INTO values (value) VALUES (${rando})`;
-
-        const queryResult = await client.query(query);
-        */
-
         res.status(200).sendFile(__dirname + '/aha.html');
-        //res.status(200).send('Success: Inserted ' + rando + '</br>');
+    } catch (err) {
+        next(err);
+        return;
+    }
+});
 
+app.post('/aha', async (req, res, next) => {
+    try {
+        let username = req.body.username;
+        let password = req.body.password;
+        let values = [username, username, password];
+        let query = `
+            INSERT INTO account (username, display_name, hashed_password)
+            VALUES ($1, $2, $3)
+        `;
+        let queryResult = await client.query(query, values);
+        res.status(200).send(queryResult);
     } catch (err) {
         next(err);
         return;
