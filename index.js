@@ -9,7 +9,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.all('/*', function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', 'https://endlessarcade.herokuapp.com', 'https://endlessarcade.herokuapp.com/*');
+    res.header('Access-Control-Allow-Origin', 'http://endlessarcade.herokuapp.com');
     res.header('Access-Control-Allow-Headers', 'X-Requested-With');
     next();
 });
