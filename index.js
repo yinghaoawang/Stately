@@ -9,8 +9,11 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.all('/*', function(req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', 'https://endlessarcade.herokuapp.com');
-  res.setHeader('Access-Control-Allow-Origin', 'http://endlessarcade.herokuapp.com');
+  const allowedOrigins = ['https://endlessarcade.herokuapp.com', 'http://endlessarcade.herokuapp.com'];
+  let origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
   res.header('Access-Control-Allow-Headers', 'X-Requested-With');
   next();
 });
